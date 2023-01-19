@@ -7,7 +7,8 @@ const path = require("path");
 // If you're using xp.static, you'll need Path.
 const layout = require("./views/layout");
 
-const { db } = require("./models");
+const { db, Page, User } = require("./models");
+const { userInfo } = require("os");
 db.authenticate().then(() => {
   console.log("Database connection is good!");
 });
@@ -25,6 +26,16 @@ app.get("/", (req, res, next) => {
   res.send(layout("Hello there."));
 });
 
-app.listen(port, () => {
-  console.log("Listening on 3000!");
-});
+const init = async () => {
+  //   await Page.sync();
+  //   await User.sync();
+  // after we AWAIT the "results" of Page.sync and User.sync, THEN we listen on the port....
+  // OR, we could just do this. Instead of awaiting pAGE, and User, and all that stuff piecemeal...
+  // just do it in one shot!
+  await db.sync();
+  app.listen(port, () => {
+    console.log(`Server is listening on port ${port}. Here we go.`);
+  });
+};
+
+init();
