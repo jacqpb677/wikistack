@@ -6,9 +6,13 @@ const path = require("path");
 // lets us create a path for static.
 // If you're using xp.static, you'll need Path.
 const layout = require("./views/layout");
-
 const { db, Page, User } = require("./models");
-const { userInfo } = require("os");
+const wikiRouter = require("./routes/wiki");
+const userRouter = require("./routes/users");
+
+app.use("/wiki", wikiRouter);
+app.use("/users", userRouter);
+
 db.authenticate().then(() => {
   console.log("Database connection is good!");
 });
@@ -23,7 +27,7 @@ app.use(
 );
 
 app.get("/", (req, res, next) => {
-  res.send(layout("Hello there."));
+  res.redirect("/wiki");
 });
 
 const init = async () => {
